@@ -1,0 +1,156 @@
+String getOnlyDigits(String value) => value.replaceAll(RegExp('[^\\d]'), '');
+
+bool isAllDigits(String value) => getOnlyDigits(value) == value;
+
+String toSnakeCase(String value) {
+  if ((value).isEmpty) {
+    return '';
+  }
+
+  return value.replaceAllMapped(
+      RegExp(r'[A-Z]'), (Match match) => '_${match[0]!.toLowerCase()}');
+}
+
+String toCamelCase(String subject) {
+  final _splittedString = subject.split('_');
+
+  if (_splittedString.isEmpty) {
+    return '';
+  }
+
+  final _firstWord = _splittedString[0].toLowerCase();
+  final _restWords = _splittedString
+      .sublist(1)
+      .map((String word) => toTitleCase(word))
+      .toList();
+
+  return _firstWord + _restWords.join('');
+}
+
+String toSpaceCase(String value) {
+  if ((value).isEmpty) {
+    return '';
+  }
+
+  return value.replaceAllMapped(
+      RegExp(r'[A-Z]'), (Match match) => ' ${match[0]!.toLowerCase()}');
+}
+
+String toTitleCase(String text) {
+  if ((text).isEmpty) {
+    return '';
+  }
+
+  if (text.length <= 1) {
+    return text.toUpperCase();
+  }
+
+  text = toSpaceCase(text);
+  final words = text.split(' ');
+  final capitalized = words.map((word) {
+    if (word == 'url') {
+      return 'URL';
+    }
+
+    if (word.length <= 1) {
+      return word;
+    }
+
+    final first = word.substring(0, 1).toUpperCase();
+    final rest = word.substring(1);
+    return '$first$rest';
+  });
+
+  return capitalized.join(' ');
+}
+
+// https://stackoverflow.com/a/57541846/497368
+String removeAllHtmlTags(String htmlText) {
+  final exp = RegExp(
+    r'<[^>]*>',
+    multiLine: true,
+    caseSensitive: true,
+  );
+
+  return htmlText.replaceAll(exp, '');
+}
+
+String getFirstName(String value) {
+  final parts = value.split(' ');
+  if (parts.length > 1) {
+    parts.removeLast();
+  }
+  return parts.join(' ');
+}
+
+String getLastName(String value) {
+  final parts = value.split(' ');
+  if (parts.length <= 1) {
+    return '';
+  }
+  return parts.last;
+}
+
+bool isValidDate(String input) {
+  try {
+    DateTime.parse(input);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+void printWrapped(String text) {
+  if (text.length > 20000) {
+    text = text.substring(0, 20000);
+  }
+
+  final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+  pattern.allMatches(text).forEach((match) => print(match.group(0)));
+}
+
+int secondToLastIndexOf(String string, String pattern) {
+  string = string.substring(0, string.lastIndexOf(pattern));
+
+  return string.lastIndexOf(pattern);
+}
+
+String trimUrl(String url) {
+  url = url.replaceFirst('http://', '').replaceFirst('https://', '');
+
+  if (url.startsWith('www.')) {
+    url = url.replaceFirst('www.', '');
+  }
+
+  return url;
+}
+
+checkIfUrl(mystring) {
+  try {
+    return Uri.tryParse(mystring)?.hasAbsolutePath ?? false;
+  } catch (e) {
+    return false;
+  }
+}
+
+getFileName(String fileName) {
+  return captialize(fileName.split("/").last.replaceAll("'", ""));
+}
+
+String getFileExtension(String fileName) {
+  return fileName.split(".").last.replaceAll("'", '');
+}
+
+captialize(label) {
+  return label.replaceFirst(label[0], label[0].toUpperCase());
+}
+
+splitUnderScoreAndFormName(label) {
+  return label.contains('_')
+      ? label.split('_').map((val) => captialize(val)).join(" ")
+      : label;
+}
+
+getExtension(String myString) {
+  return myString.split(".")[myString.split(".").length - 1];
+}
